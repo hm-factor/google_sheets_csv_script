@@ -6,7 +6,9 @@ headers = ['Date', 'Day', 'Time-1', 'Time-2',
 
 data = []
 
-with open('./albany_test.csv') as f:
+# you need to hardcode the name of the file in here (unless you are ok with them
+# all being named the same thing)
+with open('./2022 Sandy Hook.csv') as f:
   file_reader = csv.reader(f, delimiter=' ', quotechar='|')
 
   data_row_date = ['']
@@ -37,7 +39,11 @@ with open('./albany_test.csv') as f:
         data_row_times.append(new_row[2])
         data_row_fts.append(new_row[3])
 
-with open('./script_test.csv', 'w') as f:
+  data_row_date += data_row_times + data_row_fts
+  data.append(data_row_date)
+
+# creates a new file under this name composed of all the data above
+with open('./new_2022_sandy_hook.csv', 'w') as f:
   writer = csv.writer(f)
   writer.writerow(headers)
   writer.writerows(data)
