@@ -9,7 +9,7 @@ data = []
 
 # you need to hardcode the name of the file in here (unless you are ok with them
 # all being named the same thing)
-with open('./test_hell.csv', 'r') as f:
+with open('./hell_gate.csv', 'r') as f:
   file_reader = csv.reader(f, delimiter=' ')
 
   date_value = [""]
@@ -19,24 +19,24 @@ with open('./test_hell.csv', 'r') as f:
 
   for row in file_reader:
     row = [x for x in row if x != '']
-    print(row)
     # store current date
     curr_date = date_value[0]
-    print(curr_date != row[0], curr_date, row[0])
-
     if curr_date != row[0]:
-      if curr_date != '':
-        if len(slack_times) > len(max_times):
-          max_times.append("")
-          knots.append("")
+      if date_value[0] != '':
+        if len(slack_times) < 5 or len(max_times) < 5:
+          slack_add = [''] * (5 - len(slack_times))
+          max_add = [''] * (5 - len(max_times))
+          slack_times += slack_add
+          knots += max_add
+          max_times += max_add
         date_value += slack_times + max_times + knots
-        print(date_value)
         data.append(date_value)
-        date_value = [curr_date]
-        slack_times = []
-        max_times = []
-        knots = []
 
+      date_value = []
+      slack_times = []
+      max_times = []
+      knots = []
+      date_value.append(row[0])
       if row[2] != 'slack':
         slack_times.append("")
         max_times.append(row[1])
@@ -51,12 +51,17 @@ with open('./test_hell.csv', 'r') as f:
         knots.append(row[3] + max_type)
       else:
         slack_times.append(row[1])
-
+  if len(slack_times) < 5 or len(max_times) < 5:
+    slack_add = [''] * (5 - len(slack_times))
+    max_add = [''] * (5 - len(max_times))
+    slack_times += slack_add
+    knots += max_add
+    max_times += max_add
   date_value += slack_times + max_times + knots
   data.append(date_value)
 
 # creates a new file under this name composed of all the data above
-with open('./new_test.csv', 'w') as f:
+with open('./new_hell_gate.csv', 'w') as f:
   writer = csv.writer(f)
   writer.writerow(headers)
   writer.writerows(data)
